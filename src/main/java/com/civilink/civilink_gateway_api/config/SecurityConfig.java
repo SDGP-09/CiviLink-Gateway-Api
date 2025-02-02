@@ -17,29 +17,32 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity){
-        serverHttpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(authorize->
-                        authorize.pathMatchers(HttpMethod.POST,"/api/v1/users/**").permitAll()
-                                .pathMatchers("/eureka/*").permitAll()
-                                .anyExchange()
-                                .authenticated())
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
+        serverHttpSecurity
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(authorize -> authorize
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests
+                        .pathMatchers(HttpMethod.POST, "/api/v1/users/**").permitAll()
+                        .pathMatchers("/eureka/*").permitAll()
+                        .anyExchange().authenticated()
+                )
                 .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt);
 
         return serverHttpSecurity.build();
     }
 
     @Bean
-    public CorsWebFilter corsWebFilter(){
+    public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.setAllowedMethods(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setMaxAge(3600L);
-        corsConfiguration.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",corsConfiguration);
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsWebFilter(source);
     }
