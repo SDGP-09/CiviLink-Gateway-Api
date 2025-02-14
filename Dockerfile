@@ -6,7 +6,8 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Stage 2: Create the final image
-FROM openjdk:17-alpine
+FROM openjdk:17
+
 WORKDIR /app
 COPY --from=build /app/target/civilink-gateway-server.jar .
 EXPOSE 9090
