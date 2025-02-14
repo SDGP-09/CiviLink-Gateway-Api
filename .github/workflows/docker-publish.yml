@@ -24,9 +24,27 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t lasithdev/civilink-gateway-server:${{github.sha}} .
+          docker build --platform linux/amd64 -t lasithdev/civilink-gateway-server:${{github.sha}} .
           docker tag lasithdev/civilink-gateway-server:${{github.sha}} lasithdev/civilink-gateway-server:latest
           
       - name: Push Docker Image to Docker hub
         run: |
           docker push lasithdev/civilink-gateway-server:latest
+
+        # Authenticate with GKE
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT }}
+
+      - name: Authenticate kubectl
+        run: |
+          gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+          gcloud container clusters get-credentials civilink-cluster --zone us-central1-c --project ${{ secrets.GCP_PROJECT }}
+
+        # Deploy the new image to GKE
+      - name: Update GKE Deployment
+        run: |
+          kubectl set image deployment/civilink-gateway civilink-gateway=lasithdev/civilink-gateway-server:latest -n development
+          kubectl rollout status deployment/civilink-gateway -n development
