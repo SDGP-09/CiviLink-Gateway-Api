@@ -10,6 +10,6 @@ FROM openjdk:17
 
 WORKDIR /app
 COPY --from=build /app/target/civilink-gateway-server.jar .
-COPY keystore.p12 /app/keystore.p12
+COPY keystore.p12 src/main/resources/keystore.p12
 EXPOSE 9090
 CMD ["java", "-jar", "civilink-gateway-server.jar"]
