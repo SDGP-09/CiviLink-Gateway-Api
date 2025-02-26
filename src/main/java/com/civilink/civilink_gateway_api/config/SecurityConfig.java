@@ -25,6 +25,8 @@ public class SecurityConfig {
                 .authorizeExchange(authorize -> authorize
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests
                         .pathMatchers(HttpMethod.POST, "/api/v1/users/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/messages/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/messages/**").permitAll()
                         .pathMatchers("/eureka/*").permitAll()
                         .anyExchange().authenticated()
                 )
