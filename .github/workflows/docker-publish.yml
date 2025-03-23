@@ -22,7 +22,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build --platform linux/amd64 -t lasithdev/civilink-gateway-server:${{github.sha}} .
+          docker build --no-cache --platform linux/amd64 -t lasithdev/civilink-gateway-server:${{ github.sha }} .
+
           docker tag lasithdev/civilink-gateway-server:${{github.sha}} lasithdev/civilink-gateway-server:latest
           
       - name: Push Docker Image to Docker hub
