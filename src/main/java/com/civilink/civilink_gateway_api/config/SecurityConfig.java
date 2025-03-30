@@ -39,6 +39,14 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/api/tenders/**").permitAll()
                         .pathMatchers(HttpMethod.PUT, "/api/tenders/**").permitAll()
                         .pathMatchers(HttpMethod.DELETE, "/api/tenders/**").permitAll()
+                                   
+                        .pathMatchers(HttpMethod.POST, "/api/v1/images/**").permitAll()
+                        .pathMatchers(HttpMethod.DELETE, "/api/v1/images/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/ratings/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/ratings/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/public-project-display/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/public-project-display/**").permitAll()
+                        
                         .pathMatchers("/eureka/*").permitAll()
                         .anyExchange().authenticated()
                 )
