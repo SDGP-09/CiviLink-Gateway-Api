@@ -10,6 +10,7 @@ FROM openjdk:17
 
 WORKDIR /app
 COPY --from=build /app/target/civilink-gateway-server.jar .
+COPY src/main/resources/application.properties ./config/
 
 EXPOSE 9090
 CMD ["java", "-jar", "civilink-gateway-server.jar"]
